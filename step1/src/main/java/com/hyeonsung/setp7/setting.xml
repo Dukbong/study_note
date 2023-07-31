@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.3.xsd">
+	
+ 	<!-- context : 만든 객체 중에 어노테이션을 찾아 달라는 NameSpace -->
+	<context:annotation-config/>
+	<!-- Autowired를 사용하면 id값을 줄 필요가 없다. -->
+	<!-- 자료형을 근거로 바인딩하지만 같은 객체가 2개 이상 있다면 id값을 근거로 바인딩한다. -->
+	<!-- 하지만 아래 같이 작성할 경우 변경될때 마다 코드를 수정해야하기 때문에 Qualifier 어노테이션을 사용한다. -->
+	<bean id="examXmlTest1" class="com.hyeonsung.setp7.entity.JangExamXmlTest" p:java="10" p:js="20" p:python="30"/>
+<!-- 	<bean id="examXmlTest2" class="com.hyeonsung.setp7.entity.JangExamXmlTest" p:java="20" p:js="30" p:python="40"/> -->
+	
+	<bean id="examXmlConsole1" class="com.hyeonsung.setp7.ui.GridExamXmlConsole">
+<!-- 		<property name="examXmlTest" ref="examXmlTest"/> -->
+	</bean>
+	
+	<bean id="examXmlConsole2" class="com.hyeonsung.setp7.ui.InlineExamXmlConsole"/>
+	
+	
+	
+</beans>
