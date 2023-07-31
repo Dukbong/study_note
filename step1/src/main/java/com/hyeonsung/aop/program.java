@@ -4,6 +4,9 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
 import com.hyeonsung.aop.entity.JangTest;
 import com.hyeonsung.aop.entity.Test;
 
@@ -55,6 +58,5 @@ public class program {
 		
 		System.out.println("Core-Concern");
 		System.out.printf("total is %d\n", test.total());
-		
 	}
 }
