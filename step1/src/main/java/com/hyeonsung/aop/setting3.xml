@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.3.xsd">
+	
+	<bean id="target" class="com.hyeonsung.aop.entity.JangTest" p:java="10" p:js="20" p:python="30"/>
+	
+	<bean id="logAroundAdvice" class="com.hyeonsung.aop.logAdvice.LogAroundAdvice"/>
+	<bean id="logBeforeAdvice" class="com.hyeonsung.aop.logAdvice.LogBeforeAdvice"/>
+	<bean id="proxy" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="target" ref="target"/>
+		<property name="interceptorNames">
+			<!-- 리스트이기 때문에 여러개를 넣어도 가능하다. -->
+			<list>
+				<value>logAroundAdvice</value>
+				<value>logBeforeAdvice</value>
+			</list>
+		</property>
+	</bean>	
+</beans>
