@@ -10,7 +10,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import com.hyeonsung.aop.entity.JangTest;
 import com.hyeonsung.aop.entity.Test;
 
-public class program {
+public class Program {
 	// AOP는 방법론 중 하나이며 스프링은 이것을 도와줄 수 있다.
 	// 관점 지향 프로그래밍
 	// Aspect Oriented Programming
