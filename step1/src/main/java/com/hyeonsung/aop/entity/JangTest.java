@@ -15,7 +15,7 @@ public class JangTest implements Test{
 		this.java = java;
 		this.js = js;
 		this.python = python;
-	}
+	} 
 	
 
 	@Override
