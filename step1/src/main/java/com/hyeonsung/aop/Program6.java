@@ -1,0 +1,18 @@
+package com.hyeonsung.aop;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import com.hyeonsung.aop.entity.Test;
+
+public class Program6 {
+
+	public static void main(String[] args) {
+		ApplicationContext context = new ClassPathXmlApplicationContext("com/hyeonsung/aop/setting5.xml");
+		
+		Test test = (Test) context.getBean("proxy");
+		System.out.println("total : " + test.total());
+		System.out.println("avg   : " + test.avg());
+	}
+
+}

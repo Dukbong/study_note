@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.3.xsd">
+	
+	<bean id="target" class="com.hyeonsung.aop.entity.JangTest" p:java="10" p:js="20" p:python="30"/>
+	
+	<bean id="logAroundAdvice" class="com.hyeonsung.aop.logAdvice.LogAroundAdvice"/>
+	<bean id="logBeforeAdvice" class="com.hyeonsung.aop.logAdvice.LogBeforeAdvice"/>
+	<bean id="logAfterReturningAdvice" class="com.hyeonsung.aop.logAdvice.LogAfterReturningAdvice"/>
+	<bean id="logAfterThrowingAdvice" class="com.hyeonsung.aop.logAdvice.LogAfterThrowingAdvice"/>
+	
+	<!-- 간소화된 BeforeAdvice를 Total에만 Joint Point 될 수 있도록 설정 -->
+<!-- 	<bean id="newBeforeAdvisor" class="org.springframework.aop.support.NameMatchMethodPointcutAdvisor"> -->
+<!-- 		<property name="advice" value="logBeforeAdvice"/> -->
+ <!-- 		이런식으로 여러가지도 적용이 가능하다. -->
+<!-- 		<property name="mappedNames"> -->
+ 			<!-- 이런식으로 할 경우 많아지면 복잡하기 때문에 정규식으로 Pointcut 하는 방법이 있다. -->
+<!-- 			<list> -->
+<!-- 				<value>total</value> -->
+<!-- 				<value>avg</value> -->
+<!-- 			</list> -->
+<!-- 		</property> -->
+<!-- 	</bean> -->
+
+	<bean id="newBeforeAdvisor" class="org.springframework.aop.support.RegexpMethodPointcutAdvisor">
+		<property name="advice" value="logBeforeAdvice"/>
+		<property name="patterns">
+			<!-- 이런식으로 할 경우 많아지면 복잡하기 때문에 정규식으로 Pointcut 하는 방법이 있다. -->
+			<list>
+				<value>.*to.*</value>
+			</list>
+		</property>
+	</bean>
+	
+	
+	
+	<!-- 간소화된 AroundAdvice를 Total에만 Joint Point 될 수 있도록 설정 -->
+	<bean id="newAroundAdvisor" class="org.springframework.aop.support.NameMatchMethodPointcutAdvisor">
+		<property name="advice" value="logAroundAdvice"/>
+		<property name="mappedName" value="total"/>
+	</bean>
+	
+	<bean id="proxy" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="target" ref="target"/>
+		<property name="interceptorNames">
+			<list>
+				<value>newAroundAdvisor</value> <!-- 실행 전 후 -->
+				<value>newBeforeAdvisor</value> <!-- Point Cut을 지정해준 메소드만 실행 전  -->	
+				<value>logAfterReturningAdvice</value> <!-- 결과 값을 반환 후  이어서 작업할 게 있을 때-->
+				<value>logAfterThrowingAdvice</value> <!-- 결과 값을 반환 후  이어서 작업할 게 있을 때-->
+			</list>
+		</property>
+	</bean>	
+</beans>
