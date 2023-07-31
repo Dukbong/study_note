@@ -12,7 +12,7 @@
 	
 	<!-- AOP 코드를 빼고 싶다면 아래 있는 bean을 주석 처리하면 쉽게 뺼 수 있다. -->
 	<!-- 장점 : 코드 수정없이 xml 파일 수정만으로 가능하다. -->
-	<bean id="logAroundAdvice" class="com.hyeonsung.aop.logAroundAdvice.LogAdvice"/>
+	<bean id="logAroundAdvice" class="com.hyeonsung.aop.logAdvice.LogAdvice"/>
 	<bean id="proxy" class="org.springframework.aop.framework.ProxyFactoryBean">
 		<property name="target" ref="target"/>
 		<property name="interceptorNames">
