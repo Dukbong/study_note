@@ -543,3 +543,77 @@ abstract class AbstractTest{ // 추상 클래스
     abstract void move(); // 추상 메소드
 }
 ```
+
+### 접근제어자
+접근제어자를 사용하는 이유는 외부로부터 데이터를 보호하기 위해서이며 이를 캡슐화라고 부른다.
+
+#### public (클래스, 멤버)
+접근 제한이 전혀 없다.
+#### protected (멤버)
+같은 패키지 내에서 사용 가능 + 다른 패키지의 상속 후 자식 클래스에서만 사용 가능
+#### (default) (클래스, 멤버) - 생략 가능
+같은 패키지 내에서만 사용 가능
+#### private (멤버)
+같은 클래스 내에서만 사용 가능
+
+### 캡슐화
+외부에는 불필요하고 내부적으로만 사용되는 부분을 감추기 위해서 사용한다.
+
+```java
+public class Test{
+    // private이기 때문에 외부에서 직접 접근이 안된다.
+    private int year;
+    private int month;
+
+    // 메소드를 사용해야만 외부에서 간접적으로 접근할 수 있다.
+    public int getYear(){return year;}
+    public int setYear(int year){
+        if(year < 0 || year > 2023){
+            return;
+        }
+        this.year = year;
+    }
+}
+```
+
+### 다형성
+쉽게 말해 부모의 타입으로 자식의 타입을 컨트롤 할 수 있다.
+
+```java
+class Tv{
+    int channel;
+    void channelUp(){++channel;}
+}
+class SmartTv extends Tv{
+    String text;
+    void show(){System.out.println(text);}
+}
+
+Tv t = new SmartTv(); // 가능하다.
+// 하지만 이 경우 참조변수 t에서 접근 가능한것은 Tv 인스턴스이다.
+```
+
+### 참조 변수의 형변환
+사용할 수 있는 멤버의 개수를 조절하는 것을 말한다.
+
+```java
+SmartTv st = new SmartTv();
+Tv t = (Tv)st; // 가능 조상인 Tv타입으로 형 변환(생략 가능)
+SmartTv st2 = (SmartTv)t; // 가능 자식인 smartTV타입으로 형 변환 (생략 불가능)
+
+// 상속 관계가 아닌 클래스 간의 형변환은 불가능하다.
+```
+
+### instanceof 연산자
+참조변수의 형변환 가능 여부 확인에 사용한다. (가능할 경우 true 반환)
+
+⭐ A instanceof B : A가 B의 부모 또는 자기자신이라면 true 반환
+
+```java
+void work(Tv t){
+    if(t instnaceof SmartTv){
+        SmartTv st = (SmartTv)t;
+        t.show();
+    }
+}
+```
