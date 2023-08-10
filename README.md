@@ -471,4 +471,75 @@ class Point3D extends Point{
     }
 }
 ```
+### 제어자(Modifier)
+클래스와 클래스의 멤버(변수, 메소드)에 붙혀서 부가적인 의미를 부여한다.
 
+접근제어자 : public, protected, (default), private
+
+⭐ 접근제어자의 경우는 하나만 사용 가능하다.
+
+그 외 제어자 : static, final, abstract, native, transient, synchronized, volatile, strictfp
+
+```java
+public class Test{
+    public static final int YEAR = 2023;
+    // 보통 접근제어자를 먼저 쓴다.
+    public static void main(String[] args){
+        System.out.println("YEAR = " + YEAR);
+    }
+}
+```
+
+#### static (변수, 메소드)
+변수에 사용하게 되면 모든 인스턴스에 공통적으로 사용되는 클래스 변수가 된다.
+
+- 클래스 변수는 인스턴스를 생성하지 않고도 사용 가능하다.
+- 클래스가 메모리레 로드될 때 생성된다.
+
+메소드에 사용하게 되면 인스터스를 생성하지 않고도 호출이 가능한 static 메소드가 된다.
+
+- static 메소드는 내부에서 인스턴스 멤버를 직접 사용할 수 없게 된다.
+
+```java
+class Test{
+    static int width = 100;
+    static {} // 복잡한 초기화
+    static int show(int x){
+        return 1;
+    }
+}
+```
+
+#### final (클래스, 메소드, 멤버변수, 지역변수)
+클래스에 사용하게 되면 "확장될 수 없는 클래스"가 된다.
+
+- 쉽게 말해 다른 클래스의 부모가 될 수 없다.
+
+메소드에 사용하게 되면 오버라이딩으로 재정의 할 수 없다.
+
+변수에 사용하게 되면 값을 변경할 수 없는 상수가 된다.
+
+```java
+final class Test{
+    final int MAX_SIZE = 5;
+    final void show(){
+        final int LV = MAX_SIZE;
+        System.out.println(LV);
+    }
+}
+```
+
+#### abstract (클래스, 메소드)
+클래스에 사용하면 클래스 내부에 추상 메소드가 선언되어 있다는 의미이다.
+
+⭐ 미완성 설계도이기 때문에 인스턴스를 생성 할 수 없다.
+
+⭐ 자식이 상속을 받아서 완전한 클래스로 만든 후 사용해야 한다.
+
+메소드에 사용하면 선언부만 있고 구현부가 없는 추상 메소드임을 알린다.
+
+```java
+abstract class AbstractTest{ // 추상 클래스 
+    abstract void move(); // 추상 메소드
+}
+```
