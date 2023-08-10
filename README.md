@@ -607,13 +607,159 @@ SmartTv st2 = (SmartTv)t; // 가능 자식인 smartTV타입으로 형 변환 (�
 ### instanceof 연산자
 참조변수의 형변환 가능 여부 확인에 사용한다. (가능할 경우 true 반환)
 
-⭐ A instanceof B : A가 B의 부모 또는 자기자신이라면 true 반환
+⭐ A instanceof B : B가 A 자기자신이거나 부모일 경우 true를 반환
 
 ```java
 void work(Tv t){
     if(t instnaceof SmartTv){
         SmartTv st = (SmartTv)t;
         t.show();
+    }
+}
+```
+
+### 추상 클래스(Abstract class)
+미완성 설계도이며 추상 메소드를 하나라도 갖고 있는 클래스를 말한다.
+
+- 추상메소드 : 꼭 필요하지만 자식마다 다르게 구현될 것으로 예상되는 경우
+
+다른 클래스 작성에 도움을 주기 위한 것이며 독자적으로 인스턴스 생성이 불가능 하다.
+
+상속을 통해 모든 추상 메소드를 완성해야 인스턴스를 생성 가능하다.
+
+```java
+abstract class Player{
+    int currentPos; // 인스턴스 변수
+
+    Player(){ // 생성자
+        currentPos = 0;
+    }
+    
+    abstract void play(int pos); // 추상 메소드
+    abstract void stop(); // 추상 메소드
+    void play(){ // 오버로딩 : 매개변수의 개수 또는 타입이 다른 
+        play(currentPos); // 추상 메소드 호출 가능
+        // 추상 메소드를 호출할때 필요한 것은 선언부 이기 때문이다.
+    }
+}
+
+class AudioPlayer extends Player{
+    void play(int pos){}
+    void stop(){}
+}
+AudioPlayer ap = new AudioPlayer(); // OK
+Player p = new AudioPlayer(); // OK
+```
+
+### 인터페이스(interface)
+프로그래밍 관점으로는 추상 메소드의 집합을 의미하며, 구현된 것이 전혀 없는 설계도이고 모든 멤버가 public이다.
+
+- static 메소드, 상수, 디폴트 메소드도 가능하지만 부수적인것이다.
+
+```java
+interface Test{
+    public static final int YEAR = 2023; // 상수
+    String COLOR = "RED";
+    public abstract void show(); // 추상 메소드
+    void getGit();
+
+    // 메소드는 public abstract가 공통이기 때문에 생략 가능하다.
+    // 상수의 경우 public static final이 공통이기 때문에 생략 가능하다.
+}
+```
+
+#### 인터페이스 상속
+인터페이스의 조상은 인터페이스만 가능하고 Object는 인터페이스의 최고 조상이 아니다.
+
+⭐ 다중 상속이 가능하다. - 충돌이 발생해도 구현부가 없기 때문에 상관없다.
+
+⭐ 인터페이스를 구현한 곳에서 구현부를 완성하면 되기 때문이다.
+
+```java
+interface Movable{
+    void move(int x, int y);
+}
+interface Attackable{
+    void attack(Unit u);
+}
+interface Fightable extends Movable, Attackable{}
+```
+
+#### 인터페이스 구현
+인터페이스에 정의된 추상 메소드를 완성하는 것을 말한다.
+
+⭐ 모든 추상 메소드를 구현하지 않으면 추상 클래스가 된다.
+
+```java
+class Fighter implements Fightable{
+    // implements 키워드를 사용해서 인터페이스의 추상메소드를 모두 구현해야한다.
+    void move(int x, int y) {}
+    void attack(Unit u) {}
+}
+Fighter f = new Fighter();
+```
+
+#### 인터페이스를 이용한 다형성
+인터페이스도 구현 클래스의 부모라고 볼 수 있다.
+
+```java
+class Fighter extends Unit implements Fightable{
+    public void move(int x, int y){}
+    public void attack(Fightable f){}
+}
+
+Unit u = new Fighter(); // 클래스 간 다형성
+
+Fightable f = new Fighter(); // 인터페이스와 클래스 간 다형성
+// 이때도 Fightable에 정의된 메소드들만 사용가능하다.
+f.move(10,20);
+f.attack(new Fighter()); // 매개변수 다형성을 이용
+```
+
+그 외에도 인터페이스를 메소드의 리턴타입으로 지정할 수 있다.
+
+```java
+Fightable method(){
+    Fighter f = new Fighter(); // Fighter는 Fightable을 구현한 객체이기 때문에 가능하다.
+    return f;
+}
+```
+
+#### 인터페이스의 장점
+두 객체 간을 돕는 중간 역할을 한다.
+
+⭐ 설계와 구현을 분리시켜서 클래스를 유연하고 변경에 유리하게 만든다.
+
+⭐ 인터페이스를 사용하면 느슨한 결합이 가능하다.
+
+```java
+// 강한 결합 - 직접적인 관
+class A {
+    public void methodA(B b){ // B클래스와 직접적인 관계
+    // 만약 class C가 새로 생기면 전체 내용을 변경해야한다.
+        b.methodB();
+    }
+}
+
+class B {
+    public void methodB(){
+        System.out.println("methodB");
+    }
+}
+
+// 느슨한 결합 - 간접적인관계
+class AA{
+    public void methodAA(I i){ // I와 관계가 생겨서 BB와는 간접적인 관계가 된다.
+    // 새로운 class C가 생겨도 AA클래스의 내용을 바꿀 필요가 없다.
+        i.methodBB();
+    }
+}
+
+interface I{ void methodBB(); }
+
+class BB implements I{
+    public void methodBB(){
+        System.out.println("methodBB");
     }
 }
 ```
