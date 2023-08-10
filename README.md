@@ -654,7 +654,7 @@ Player p = new AudioPlayer(); // OK
 ### 인터페이스(interface)
 프로그래밍 관점으로는 추상 메소드의 집합을 의미하며, 구현된 것이 전혀 없는 설계도이고 모든 멤버가 public이다.
 
-- static 메소드, 상수, 디폴트 메소드도 가능하지만 부수적인것이다.
+- JDK 1.8 이후로는 static 메소드, 상수, 디폴트 메소드도 가능하지만 부수적인것이다.
 
 ```java
 interface Test{
@@ -728,6 +728,8 @@ Fightable method(){
 #### 인터페이스의 장점
 두 객체 간을 돕는 중간 역할을 한다.
 
+서로 관계없는 클래스들 간 관계를 맺어 줄 수도 있다.
+
 ⭐ 설계와 구현을 분리시켜서 클래스를 유연하고 변경에 유리하게 만든다.
 
 ⭐ 인터페이스를 사용하면 느슨한 결합이 가능하다.
@@ -760,6 +762,151 @@ interface I{ void methodBB(); }
 class BB implements I{
     public void methodBB(){
         System.out.println("methodBB");
+    }
+}
+```
+
+```java
+class Unit{}
+class Ground extends Unit{}
+class Air extends Unit{}
+
+Interface Repariable{}
+class A extends Ground implements Repariable{}
+class B extends Air implements Repariable{}
+class C extends Ground 
+
+//... 생략
+void repair(Repariable r){ // A, B만 가능하다.
+    if(r instanceof Unit){
+        //... 생략
+    }
+}
+```
+
+#### 디폴트 메서드
+인터페이스에 새로운 추상 메소드를 추가하기 어렵다.
+
+이 문제를 해결하기 위해서 나온 것이 디폴트 메서드 이다.
+
+하지만 이로 인해 충돌이 발생하는데 이를 해결하는 방법은 아래와 같다.
+
+⭐ 여러 인터페이스의 디폴트 메소드 간의 충돌
+⭐ 해결 : 인터페이스를 구현한 클래스에서 디폴트 메소드를 오버라이딩하야 해결할 수 있다.
+
+⭐ 디폴트 메서드와 부모 클래스의 메소드 간의 충돌
+⭐ 해결 : 부모 클래스의 메소드가 상속되고 디폴트 메서드는 무시된다.
+
+```java
+interface Test{
+    void method();
+    default void newMethod(){}
+}
+```
+
+### 내부 클래스 (inner class)
+클래스 안에 있는 클래스를 말한다.
+
+내부 클래스의 장점
+
+- 내부 클래스에서 외부 클래스의 멤버들을 객체생성 없이 쉽게 접근가능하다.
+- 코드의 복잡성을 줄이며 캡슐화가 가능하다.
+
+```java
+class A{ // B의 외부 클래
+    int i = 1;
+    B b = new B();
+
+    class B{ // A의 내부 클래스
+        // ⭐객체 생성없이 A의 멤버 접근 가능하다.
+        void show(){System.out.println(i);}
+    }
+}
+```
+
+#### 내부 클래스의 종류와 scope는 변수와 동일하다.
+```java
+class Outer{
+    private class InstanceIneer{} // 인스턴스 변수와 동일
+    protected static class StaticInner{} // 클래스 변수와 동일
+
+    void method(){
+        class LocalInner{} // 지역 변수와 동일
+    }
+}
+```
+
+##### 인스턴스 클래스
+주로 외부 클래스의 인스턴스 멤버들과 관련된 작업에 사용될 목적으로 선언된다.
+
+##### 스태틱 클래스
+주로 외부 클래스의 static 멤버, 특히 static 메소드에서 사용될 목적으로 선언된다.
+
+##### 지역 클래스
+외부 클래스의 메소드나 초기화블록 안에 선언하며, 선언된 영역 내에서만 사용 가능하다.
+
+##### 익명 클래스
+클래스의 선언과 객체의 생성을 동시에 하는 이름 없는 클래스이고 1회용이다.
+
+⭐ 주의 사항 : 내부 클래스의 접근제어자는 변수에 사용 가능한 4가지 모두 사용 가능하다.
+
+```java
+class Outer{
+    private int outerIv = 0;
+
+    class InstanceInner{
+        int iv = 10;
+        // static int cv = 20; 불가능하다.
+        // 이유는 static은 객체 생성 없이 사용해야하지만 지금은 생성해야하기 때문이다.
+        final static int CONST = 100; // 상수는 가능하다.
+        // 사용시 "해당 클래스명.CONST" 이렇게 접근이 가능하다.
+
+        int iiv = outerIv; // 외부 클래스의 private 멤버도 접근 가능하다.
+    }
+
+    static class StaticInner{
+        int iv = 30;
+        static int cv = 40; // static 클래스는 static 멤버를 정의할 수 있다.
+        // 사용시 "해당 클래스명.cv" 이렇게 접근이 가능하다.
+    }
+
+    void method(){
+        int lv = 0;
+        final LV = 0;
+
+        class LocalInner{
+            int iv = 50;
+            // static int cv = 60; 불가능하다.
+            // 이유는 static은 객체 생성 없이 사용해야하지만 지금은 생성해야하기 때문이다.
+            final static int CONST = 70; // 상수는 가능하다.
+
+            // int liv = lv; 불가능하다.
+            // 이유는 내부 클래스의 객체가 메소드안에 있는 지역변수보다 더 오래 존재할 수 있기 때문이다.
+            // 하지만 jdk 1.8부터는 값이 변하지 않으면 상수 취급하기 때문에 가능하다.
+            int liv2 = LV; // 가능하다.
+        }
+    }
+}
+```
+
+### 익명 클래스
+이름이 없는 일회용 클래스이며 정의와 생성을 한번에 한다.
+
+```java
+new 조상클래스이름(){
+    //...
+}
+
+new 구현인터페이스이름(){
+    //...
+}
+
+class Test{
+    Object iv = new Object(){void method(){}}; // 익명 클래스
+    static Object cv = new Object(){void method(){}}; // 익명 클래스
+
+    void method(){
+        Object lv = new Object(){void method(){}}; // 익명 클래
     }
 }
 ```
